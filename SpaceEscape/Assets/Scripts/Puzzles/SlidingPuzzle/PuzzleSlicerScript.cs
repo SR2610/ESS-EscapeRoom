@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ImageSlicer {
+public static class PuzzleSlicerScript
+{
 
     public static Texture2D[,] GetSlices(Texture2D ImageToSlice, int SegmentsPerLine)
     {

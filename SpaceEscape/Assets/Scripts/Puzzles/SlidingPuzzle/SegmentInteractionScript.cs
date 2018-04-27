@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Segment : InteractableObjectScript {
+public class SegmentInteractionScript : InteractableObjectScript {
 
 
 	
@@ -20,7 +20,7 @@ public class Segment : InteractableObjectScript {
 		return "Press " + (UsingController ? "X" : "F") + " to Move Puzzle Piece";
 	}
 
-	public event System.Action<Segment> TilePressedEvent;
+	public event System.Action<SegmentInteractionScript> TilePressedEvent;
 	public event System.Action TileMovedEvent;
 
     public Vector2 Position;

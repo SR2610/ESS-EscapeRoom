@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Puzzle : MonoBehaviour
+public class SlidingPuzzleScript : MonoBehaviour
 {
 
 	public Texture2D image;
@@ -14,9 +14,9 @@ public class Puzzle : MonoBehaviour
 	private enum PuzzleState { Solved, Shuffling, InPlay };
 	private PuzzleState CurrentState;
 
-	Segment EmptySegment;
-	Segment[,] Segments;
-	Queue<Segment> Inputs;
+	SegmentInteractionScript EmptySegment;
+	SegmentInteractionScript[,] Segments;
+	Queue<SegmentInteractionScript> Inputs;
 	bool IsMoving;
 	int ShuffleMovesLeft;
 	Vector2 ShuffleOFfset;
@@ -40,8 +40,8 @@ public class Puzzle : MonoBehaviour
 
 	void CreatePuzzle()
 	{
-		Segments = new Segment[PerLine, PerLine];
-		Texture2D[,] Slices = ImageSlicer.GetSlices(image, PerLine);
+		Segments = new SegmentInteractionScript[PerLine, PerLine];
+		Texture2D[,] Slices = PuzzleSlicerScript.GetSlices(image, PerLine);
 		for (int y = 0; y < PerLine; y++)
 		{
 			for (int x = 0; x < PerLine; x++)
@@ -50,7 +50,7 @@ public class Puzzle : MonoBehaviour
 				blockObject.transform.position = transform.position + (Vector3)(-Vector2.one * (PerLine - 1) * .5f + new Vector2(x, y));
 				blockObject.transform.parent = transform;
 
-				Segment block = blockObject.AddComponent<Segment>();
+				SegmentInteractionScript block = blockObject.AddComponent<SegmentInteractionScript>();
 				block.TilePressedEvent += PlayerMoveBlockInput;
 				block.TileMovedEvent += OnBlockFinishedMoving;
 				block.Init(new Vector2(x, y), Slices[x, y]);
@@ -63,10 +63,10 @@ public class Puzzle : MonoBehaviour
 			}
 		}
 
-		Inputs = new Queue<Segment>();
+		Inputs = new Queue<SegmentInteractionScript>();
 	}
 
-	void PlayerMoveBlockInput(Segment blockToMove)
+	void PlayerMoveBlockInput(SegmentInteractionScript blockToMove)
 	{
 		if (CurrentState == PuzzleState.InPlay)
 		{
@@ -83,7 +83,7 @@ public class Puzzle : MonoBehaviour
 		}
 	}
 
-	void MoveBlock(Segment blockToMove, float duration)
+	void MoveBlock(SegmentInteractionScript blockToMove, float duration)
 	{
 		if ((blockToMove.Position - EmptySegment.Position).sqrMagnitude == 1)
 		{
@@ -157,7 +157,7 @@ public class Puzzle : MonoBehaviour
 
 	void CheckIfSolved()
 	{
-		foreach (Segment IndividualSegment in Segments)
+		foreach (SegmentInteractionScript IndividualSegment in Segments)
 		{
 			if (!IndividualSegment.IsAtStartingCoord())
 			{
