@@ -37,7 +37,8 @@ public class PickupItemScript : InteractableObjectScript {
 				GameObject.Find("GameManager").GetComponent<GameManagerScript>().GravityGeneratorParts++;
 				break;
 		}
-		Destroy(gameObject);
+		GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Pickup", transform);
+		Destroy(gameObject, 0.1f);
 	}
 
 	public override string FormatTooltip(bool UsingController)

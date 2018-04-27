@@ -66,6 +66,8 @@ public class LaserInteractableScript : InteractableObjectScript
 	{
 		DrawLaser();
 		Interactable = false;
+		GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("LaserStart", transform);
+
 	}
 
 	public override string FormatTooltip(bool UsingController)

@@ -83,7 +83,7 @@ public class SafeInteractionScript : InteractableObjectScript {
 
 	public void PressSafeButton(int Button)
 	{
-		//Play Button Pressing Sound
+		GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("KeyPress", transform);
 		EnteredValue += Button.ToString();
 		if (EnteredValue.Length == DesiredNumber.Length)
 			CheckCode();
@@ -95,13 +95,14 @@ public class SafeInteractionScript : InteractableObjectScript {
 			Unlock();
 		else
 		{
-			//Play Sound to Indicate Incorrect
+			GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Error", transform);
 			EnteredValue = "";
 		}
 	}
 
 	private void Unlock()
 	{
+		GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Yes", transform);
 		if (transform.Find("Door").gameObject.GetComponent<Animation>())
 			transform.Find("Door").gameObject.GetComponent<Animation>().Play("Door");
 	}

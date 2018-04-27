@@ -30,7 +30,8 @@ public class LockAndKey : InteractableObjectScript
 				break;
 			case Type.KEY:
 				GameObject.Find("GameManager").GetComponent<GameManagerScript>().HasKey = true;
-				Destroy(gameObject);
+				GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Pickup", transform);
+				Destroy(gameObject,0.1F);
 				break;
 		}
 	}

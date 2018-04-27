@@ -20,12 +20,13 @@ public class GravityGeneratorInteractionScript : InteractableObjectScript
 		{
 			GameManager.GravityGeneratorParts--;
 			PartsAdded++;
+			GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Weld", transform);
 		}
 		else if (PartsAdded == 3)
 		{
 			Interactable = false;
 			GameManager.PuzzleSolved(1, 1);
-			//Play Sound
+			GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Fixed", transform);
 		}
 	}
 

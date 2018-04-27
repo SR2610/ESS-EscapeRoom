@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControlScript : MonoBehaviour {
+public class PlayerControlScript : MonoBehaviour
+{
 
 
 	private GameObject GravRemote;
@@ -28,7 +29,8 @@ public class PlayerControlScript : MonoBehaviour {
 
 
 
-	void Start () {
+	void Start()
+	{
 		DisplayText = transform.Find("Gravity Remote").Find("Display").gameObject.GetComponent<TextMesh>();
 		DisplayText.text = GravityControlScript.GetNameOfGravity(Gravity);
 
@@ -39,7 +41,8 @@ public class PlayerControlScript : MonoBehaviour {
 		UpdateHeldItem();
 	}
 
-	void Update () {
+	void Update()
+	{
 
 		HandleSwitchItems();
 		UpdateHeldItem();
@@ -59,16 +62,16 @@ public class PlayerControlScript : MonoBehaviour {
 
 	private void HandleSwitchItems()
 	{
-		if (Input.GetButtonDown("ItemOne")&&HasScrewdriver)
+		if (Input.GetButtonDown("ItemOne") && HasScrewdriver)
 			HeldItem = Item.Screwdriver;
-		else if (Input.GetButtonDown("ItemTwo")&&HasIDCard)
+		else if (Input.GetButtonDown("ItemTwo") && HasIDCard)
 			HeldItem = Item.IDCard;
-		else if (Input.GetButtonDown("ItemThree")&&HasGravRemote)
+		else if (Input.GetButtonDown("ItemThree") && HasGravRemote)
 			HeldItem = Item.GravityRemote;
 		else if (Input.GetButtonDown("PutAway"))
 			HeldItem = Item.Empty;
-	
-}
+
+	}
 
 	private void UpdateHeldItem()
 	{
@@ -96,10 +99,12 @@ public class PlayerControlScript : MonoBehaviour {
 			if (Input.GetButtonDown("Interact"))
 		{
 			if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().GravityOn)
+			{
 				GravityControlScript.SetGravity(Gravity);
+				GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Yes", transform);
+			}
 			else
-				Debug.Log("Offline");
-				//Play Error Beep
+				GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Error", transform);
 		}
 	}
 }

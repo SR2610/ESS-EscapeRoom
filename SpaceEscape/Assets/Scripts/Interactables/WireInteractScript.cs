@@ -36,17 +36,16 @@ public class WireInteractScript : InteractableObjectScript
 	{
 		if (CurrentType == InteractType.WIRE)
 		{
-			//Play Wire Cutting Sound
 			if (WireController.WiresToCut.ToString().Contains(WireNumber.ToString()))
 			{
 				WireController.CutWire();
 			}
 			else
 			{
-				//Play sound e.g beep
+				GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Denied", transform);
 				GameManager.RemoveTime(WrongWirePenalty);
 			}
-			Destroy(gameObject);
+			Destroy(gameObject, 0.1f);
 		}
 	}
 

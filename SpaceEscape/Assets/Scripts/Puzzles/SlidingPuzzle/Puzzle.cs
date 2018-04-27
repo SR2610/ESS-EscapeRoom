@@ -6,20 +6,20 @@ public class Puzzle : MonoBehaviour
 {
 
 	public Texture2D image;
-	public int blocksPerLine = 4;
-	public int shuffleLength = 20;
-	public float defaultMoveDuration = .2f;
-	public float shuffleMoveDuration = .1f;
+	public int PerLine = 4;
+	public int ShuffleMoves = 20;
+	public float MoveTime = .2f;
+	public float ShuffleMoveTime = .1f;
 
 	private enum PuzzleState { Solved, Shuffling, InPlay };
 	private PuzzleState CurrentState;
 
-	Segment emptyBlock;
+	Segment EmptySegment;
 	Segment[,] Segments;
-	Queue<Segment> inputs;
-	bool blockIsMoving;
-	int shuffleMovesRemaining;
-	Vector2 prevShuffleOffset;
+	Queue<Segment> Inputs;
+	bool IsMoving;
+	int ShuffleMovesLeft;
+	Vector2 ShuffleOFfset;
 
 
 	void Start()
@@ -40,70 +40,70 @@ public class Puzzle : MonoBehaviour
 
 	void CreatePuzzle()
 	{
-		Segments = new Segment[blocksPerLine, blocksPerLine];
-		Texture2D[,] imageSlices = ImageSlicer.GetSlices(image, blocksPerLine);
-		for (int y = 0; y < blocksPerLine; y++)
+		Segments = new Segment[PerLine, PerLine];
+		Texture2D[,] Slices = ImageSlicer.GetSlices(image, PerLine);
+		for (int y = 0; y < PerLine; y++)
 		{
-			for (int x = 0; x < blocksPerLine; x++)
+			for (int x = 0; x < PerLine; x++)
 			{
 				GameObject blockObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
-				blockObject.transform.position = transform.position + (Vector3)(-Vector2.one * (blocksPerLine - 1) * .5f + new Vector2(x, y));
+				blockObject.transform.position = transform.position + (Vector3)(-Vector2.one * (PerLine - 1) * .5f + new Vector2(x, y));
 				blockObject.transform.parent = transform;
 
 				Segment block = blockObject.AddComponent<Segment>();
 				block.TilePressedEvent += PlayerMoveBlockInput;
 				block.TileMovedEvent += OnBlockFinishedMoving;
-				block.Init(new Vector2(x, y), imageSlices[x, y]);
+				block.Init(new Vector2(x, y), Slices[x, y]);
 				Segments[x, y] = block;
 
-				if (y == 0 && x == blocksPerLine - 1)
+				if (y == 0 && x == PerLine - 1)
 				{
-					emptyBlock = block;
+					EmptySegment = block;
 				}
 			}
 		}
 
-		inputs = new Queue<Segment>();
+		Inputs = new Queue<Segment>();
 	}
 
 	void PlayerMoveBlockInput(Segment blockToMove)
 	{
 		if (CurrentState == PuzzleState.InPlay)
 		{
-			inputs.Enqueue(blockToMove);
+			Inputs.Enqueue(blockToMove);
 			MakeNextPlayerMove();
 		}
 	}
 
 	void MakeNextPlayerMove()
 	{
-		while (inputs.Count > 0 && !blockIsMoving)
+		while (Inputs.Count > 0 && !IsMoving)
 		{
-			MoveBlock(inputs.Dequeue(), defaultMoveDuration);
+			MoveBlock(Inputs.Dequeue(), MoveTime);
 		}
 	}
 
 	void MoveBlock(Segment blockToMove, float duration)
 	{
-		if ((blockToMove.Position - emptyBlock.Position).sqrMagnitude == 1)
+		if ((blockToMove.Position - EmptySegment.Position).sqrMagnitude == 1)
 		{
-			Segments[(int)blockToMove.Position.x, (int)blockToMove.Position.y] = emptyBlock;
-			Segments[(int)emptyBlock.Position.x, (int)emptyBlock.Position.y] = blockToMove;
+			Segments[(int)blockToMove.Position.x, (int)blockToMove.Position.y] = EmptySegment;
+			Segments[(int)EmptySegment.Position.x, (int)EmptySegment.Position.y] = blockToMove;
 
-			Vector2 targetCoord = emptyBlock.Position;
-			emptyBlock.Position = blockToMove.Position;
+			Vector2 targetCoord = EmptySegment.Position;
+			EmptySegment.Position = blockToMove.Position;
 			blockToMove.Position = targetCoord;
 
-			Vector2 targetPosition = emptyBlock.transform.position;
-			emptyBlock.transform.position = blockToMove.transform.position;
+			Vector2 targetPosition = EmptySegment.transform.position;
+			EmptySegment.transform.position = blockToMove.transform.position;
 			blockToMove.MoveToPosition(targetPosition, duration);
-			blockIsMoving = true;
+			IsMoving = true;
 		}
 	}
 
 	void OnBlockFinishedMoving()
 	{
-		blockIsMoving = false;
+		IsMoving = false;
 		CheckIfSolved();
 
 		if (CurrentState == PuzzleState.InPlay)
@@ -112,7 +112,7 @@ public class Puzzle : MonoBehaviour
 		}
 		else if (CurrentState == PuzzleState.Shuffling)
 		{
-			if (shuffleMovesRemaining > 0)
+			if (ShuffleMovesLeft > 0)
 			{
 				MakeNextShuffleMove();
 			}
@@ -126,8 +126,8 @@ public class Puzzle : MonoBehaviour
 	void StartShuffle()
 	{
 		CurrentState = PuzzleState.Shuffling;
-		shuffleMovesRemaining = shuffleLength;
-		emptyBlock.gameObject.SetActive(false);
+		ShuffleMovesLeft = ShuffleMoves;
+		EmptySegment.gameObject.SetActive(false);
 		MakeNextShuffleMove();
 	}
 
@@ -139,15 +139,15 @@ public class Puzzle : MonoBehaviour
 		for (int i = 0; i < offsets.Length; i++)
 		{
 			Vector2 offset = offsets[(randomIndex + i) % offsets.Length];
-			if (offset != prevShuffleOffset * -1)
+			if (offset != ShuffleOFfset * -1)
 			{
-				Vector2 moveBlockCoord = emptyBlock.Position + offset;
+				Vector2 moveBlockCoord = EmptySegment.Position + offset;
 
-				if (moveBlockCoord.x >= 0 && moveBlockCoord.x < blocksPerLine && moveBlockCoord.y >= 0 && moveBlockCoord.y < blocksPerLine)
+				if (moveBlockCoord.x >= 0 && moveBlockCoord.x < PerLine && moveBlockCoord.y >= 0 && moveBlockCoord.y < PerLine)
 				{
-					MoveBlock(Segments[(int)moveBlockCoord.x, (int)moveBlockCoord.y], shuffleMoveDuration);
-					shuffleMovesRemaining--;
-					prevShuffleOffset = offset;
+					MoveBlock(Segments[(int)moveBlockCoord.x, (int)moveBlockCoord.y], ShuffleMoveTime);
+					ShuffleMovesLeft--;
+					ShuffleOFfset = offset;
 					break;
 				}
 			}
@@ -166,6 +166,6 @@ public class Puzzle : MonoBehaviour
 		}
 		CurrentState = PuzzleState.Solved;
 		GameObject.Find("GameManager").GetComponent<GameManagerScript>().PuzzleSolved(0, 2);
-		emptyBlock.gameObject.SetActive(true);
+		EmptySegment.gameObject.SetActive(true);
 	}
 }

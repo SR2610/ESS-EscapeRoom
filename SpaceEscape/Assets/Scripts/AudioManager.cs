@@ -10,6 +10,10 @@ public class AudioManager : MonoBehaviour {
 	public List<AudioClip> SFXClips;
 	public Dictionary<string, AudioClip> SFXDict = new Dictionary<string, AudioClip>(); //Dictionary associating the name of the SFX with the relevant file
 
+	public AudioClip FirstSong;
+	public AudioClip LastSong;
+
+
 	void Start()
 	{
 		for (int i = 0; i < SFXNames.Count; i++) //Adds to dictionary
@@ -20,7 +24,7 @@ public class AudioManager : MonoBehaviour {
 
 	public void PlaySFX(string Name, Transform Location) //Plays sound at location
 	{
-		PlaySFX(Name, gameObject.transform, DefaultRange);
+		PlaySFX(Name, Location, DefaultRange);
 
 	}
 
@@ -34,10 +38,21 @@ public class AudioManager : MonoBehaviour {
 			SFX.GetComponent<AudioSource>().Play();
 			Destroy(SFX, SFX.GetComponent<AudioSource>().clip.length); //Cleans up when clip is finished
 		}
+		else
+			Debug.LogWarning("Tried to Play Sound that Didn't Exist");
 	}
 
 	public void PlaySFX(string Name) //Plays SFX at the manager
 	{
-		PlaySFX(Name, gameObject.transform);
+		PlaySFX(Name, gameObject.transform,100);
+	}
+
+	public void PlaySecondTrack()
+	{
+		AudioSource AS = GetComponent<AudioSource>();
+		AS.Stop();
+		AS.clip = LastSong;
+		AS.Play();
+
 	}
 }

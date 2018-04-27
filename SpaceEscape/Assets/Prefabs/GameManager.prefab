@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4560988442003872}
   - component: {fileID: 114221442948676580}
   - component: {fileID: 114163238195742912}
+  - component: {fileID: 114732143754335120}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -35,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1588217903440224}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.0600023, z: -3.8769972}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -55,6 +56,12 @@ MonoBehaviour:
   TimeInMinutes: 60
   HasKey: 0
   HasPowerCell: 0
+  GravityGeneratorParts: 0
+  AirlockDoor: {fileID: 0}
+  GravityRoomDoor: {fileID: 0}
+  EscapePodDoor: {fileID: 0}
+  GravityOn: 0
+  PipeSolved: 0
 --- !u!114 &114221442948676580
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -66,3 +73,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7db6a340dc8bb147aade05be82910a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114732143754335120
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1588217903440224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c35e64f5027344caecb85a16bc8d44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SFXPrefab: {fileID: 1559599661913246, guid: ca54e60e7b5c18c4d9a92c979918f4fe, type: 2}
+  DefaultRange: 5
+  SFXNames:
+  - Pickup
+  - Error
+  - Yes
+  - Denied
+  - Door
+  - Key
+  SFXClips:
+  - {fileID: 8300000, guid: 165d82405fba4cf448c86971a27d97a1, type: 3}
+  - {fileID: 8300000, guid: b685d95dfde97124faf10ec29f267acd, type: 3}
+  - {fileID: 8300000, guid: 618dddab9c5556845bb6624f5b2aa9f7, type: 3}
+  - {fileID: 8300000, guid: 6c6af36c8503a914bb5ca4d6e77c2aea, type: 3}
+  - {fileID: 8300000, guid: 28ae0433971b44648bf9d0e6ca2e8de0, type: 3}

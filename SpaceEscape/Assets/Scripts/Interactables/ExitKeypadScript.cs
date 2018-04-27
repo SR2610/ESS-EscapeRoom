@@ -91,7 +91,7 @@ public class ExitKeypadScript : InteractableObjectScript
 
 	public void PressButton(int Button)
 	{
-		//Play Button Pressing Sound
+		GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("KeyPress", transform);
 		EnteredValue += Button.ToString();
 		if (EnteredValue.Length == DesiredNumber.Length)
 			CheckCode();
@@ -103,13 +103,14 @@ public class ExitKeypadScript : InteractableObjectScript
 			Unlock();
 		else
 		{
-			//Play Sound to Indicate Incorrect
+			GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Error", transform);
 			EnteredValue = "";
 		}
 	}
 
 	private void Unlock()
 	{
+		GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Yes", transform);
 		UnityEngine.SceneManagement.SceneManager.LoadScene("WinningScene");
 	}
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class GameManagerScript : MonoBehaviour
 	private bool GravityGeneratorRepaired = false;
 	private bool LaserSolved = false;
 	public bool PipeSolved = false;
-
+	bool FirstTrackPlaying = true;
 
 
 
@@ -46,6 +47,7 @@ public class GameManagerScript : MonoBehaviour
 		UpdateTimer();//Updates timer every frame
 		if (!TimerRunning) //If its not running, time must be up
 		{
+			GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>().m_MouseLook.lockCursor = false;	
 			UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScreen");
 		}
 	}
@@ -66,6 +68,10 @@ public class GameManagerScript : MonoBehaviour
 
 		Minutes = Mathf.Floor(TimeLeft / 60); //Calculates minutes and seconds from the seconds
 		Seconds = TimeLeft % 60;
+		if (Minutes < 10 && FirstTrackPlaying) {
+			GetComponent<AudioManager>().PlaySecondTrack();
+			FirstTrackPlaying = false;
+				}
 		if (Seconds > 59) Seconds = 59;
 		if (Minutes < 0) //If there is no minutes left, time is up!
 		{
@@ -117,6 +123,7 @@ public class GameManagerScript : MonoBehaviour
 			if (WireCuttingPuzzleCompleted && SlidingBlockPuzzleCompleted)
 			{
 				AirlockDoor.UnlockDoor();
+				GameObject.Find("GameManager").GetComponent<AudioManager>().PlaySFX("Door", AirlockDoor.transform);
 				GravityRoomDoor.UnlockDoor();
 			}
 
@@ -140,6 +147,7 @@ public class GameManagerScript : MonoBehaviour
 			if (LaserSolved && GravityGeneratorRepaired)
 				GravityOn = true;
 		}
+		GetComponent<AudioManager>().PlaySFX("Complete", GameObject.FindGameObjectWithTag("Player").transform);
 	}
 
 
