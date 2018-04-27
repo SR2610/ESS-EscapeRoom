@@ -102,9 +102,8 @@ public class SafeInteractionScript : InteractableObjectScript {
 
 	private void Unlock()
 	{
-		Debug.Log("Safe Unlocked");
-		//Play Sound
-		//Do Animation
+		if (transform.Find("Door").gameObject.GetComponent<Animation>())
+			transform.Find("Door").gameObject.GetComponent<Animation>().Play("Door");
 	}
 
 

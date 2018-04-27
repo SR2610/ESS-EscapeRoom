@@ -14,13 +14,19 @@ public class LockAndKey : InteractableObjectScript
 	public Type LockOrKey;
 
 
+	public GameObject ToolBox;
+
+
 	public override void Interact()
 	{
 		switch (LockOrKey)
 		{
 			case Type.LOCK:
 				if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().HasKey)
+				{
+					ToolBox.GetComponent<Animation>().Play("ToolBox");
 					Destroy(gameObject);
+				}
 				break;
 			case Type.KEY:
 				GameObject.Find("GameManager").GetComponent<GameManagerScript>().HasKey = true;

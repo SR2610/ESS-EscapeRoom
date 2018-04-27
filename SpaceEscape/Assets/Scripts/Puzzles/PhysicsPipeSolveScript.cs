@@ -14,6 +14,6 @@ public class PhysicsPipeSolveScript : MonoBehaviour {
 	}
 
 	private void SolvePuzzle(){
-		Debug.Log("Solved Ball Pipe Puzzle");
+		GameObject.Find("GameManager").GetComponent<GameManagerScript>().PuzzleSolved(1, 2);
 	}
 }

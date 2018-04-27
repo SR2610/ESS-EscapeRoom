@@ -15,6 +15,23 @@ public class GameManagerScript : MonoBehaviour
 
 	public bool HasKey = false;
 	public bool HasPowerCell = false;
+	public int GravityGeneratorParts = 0;
+
+
+	public DoorScript AirlockDoor;
+	public DoorScript GravityRoomDoor;
+	public DoorScript EscapePodDoor;
+
+
+
+	private bool SlidingBlockPuzzleCompleted = false;
+	private bool WireCuttingPuzzleCompleted = false;
+
+
+	public bool GravityOn = false;
+	private bool GravityGeneratorRepaired = false;
+	private bool LaserSolved = false;
+	public bool PipeSolved = false;
 
 
 
@@ -29,7 +46,7 @@ public class GameManagerScript : MonoBehaviour
 		UpdateTimer();//Updates timer every frame
 		if (!TimerRunning) //If its not running, time must be up
 		{
-			Debug.Log("Game Over");
+			UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScreen");
 		}
 	}
 
@@ -59,6 +76,11 @@ public class GameManagerScript : MonoBehaviour
 
 	}
 
+	public void RemoveTime(float SecondsToRemove)
+	{
+		TimeLeft -= SecondsToRemove;
+	}
+
 	private IEnumerator TimerRoutine()
 	{
 		while (TimerRunning)
@@ -73,4 +95,53 @@ public class GameManagerScript : MonoBehaviour
 			yield return new WaitForSeconds(0.2f);
 		}
 	}
+
+
+	public void PuzzleSolved(int RoomId,int PuzzleID) //Called when a puzzle is completed
+	{
+		if (RoomId == 0)
+		{
+			switch (PuzzleID)
+			{
+				case 1: //Sliding Block Puzzle
+					SlidingBlockPuzzleCompleted = true;
+					break;
+				case 2: //Wire cutting puzzle
+					WireCuttingPuzzleCompleted = true;
+					break;
+				default:
+					Debug.Log("Tried to register a different puzzle");
+					break;
+			}
+
+			if (WireCuttingPuzzleCompleted && SlidingBlockPuzzleCompleted)
+			{
+				AirlockDoor.UnlockDoor();
+				GravityRoomDoor.UnlockDoor();
+			}
+
+		}
+		else
+		{
+			switch (PuzzleID)
+			{
+				case 1: //Gravity Generator Repaired
+					GravityGeneratorRepaired = true;	
+					break;
+				case 2: //Physics Puzzle
+					PipeSolved = true;
+					break;
+				case 4: //Laser Grid Done
+					LaserSolved = true;
+					break;
+				default:
+					break;
+			}
+			if (LaserSolved && GravityGeneratorRepaired)
+				GravityOn = true;
+		}
+	}
+
+
+
 }

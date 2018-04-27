@@ -75,6 +75,6 @@ public class LaserInteractableScript : InteractableObjectScript
 
 	private void SolvePuzzle()
 	{
-		Debug.Log("Solved");
+		GameObject.Find("GameManager").GetComponent<GameManagerScript>().PuzzleSolved(1,4);
 	}
 }

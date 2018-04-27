@@ -11,6 +11,12 @@ public class PanelScript : InteractableObjectScript {
 		Interactable = false;
 	}
 
+	private void Update()
+	{
+		if (NumberOfScrews == 0 && !Interactable)
+			Interactable = true;
+	}
+
 	public override void Interact()
 	{
 		Destroy(gameObject);

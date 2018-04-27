@@ -6,6 +6,7 @@ public class InteractableObjectScript : MonoBehaviour {
 
 	public string TooltipName;
 	public bool Interactable = true;
+	
 
 	public virtual void Interact()
 	{

@@ -22,45 +22,40 @@ public class InteractScript : MonoBehaviour
 
 	void Update()
 	{
-		var Hits = Physics.RaycastAll(transform.position, transform.forward, RaycastRange);
+		RaycastHit HitInfo;
+		bool Hit = Physics.Raycast(transform.position, transform.forward, out HitInfo, RaycastRange);
 
 		InteractedObject = null;
 		ToolTip.text = "";
 
-		if (Hits.Length > 0)
+		if (Hit)
 		{
-			foreach (var item in Hits)
+			if (HitInfo.transform.gameObject.GetComponent<InteractableObjectScript>() && HitInfo.transform.gameObject.GetComponent<InteractableObjectScript>().Interactable)
 			{
-				if (item.transform.gameObject.GetComponent<InteractableObjectScript>() && item.transform.gameObject.GetComponent<InteractableObjectScript>().Interactable)
-				{
 
-					InteractedObject = item.transform.gameObject;
-					ToolTip.text = item.transform.gameObject.GetComponent<InteractableObjectScript>().FormatTooltip(UsingController);
-					if (LastObject != InteractedObject)
-					{
-						if (LastObject != null)
-							LastObject.GetComponent<Renderer>().material.color = LastColor;
-						LastObject = InteractedObject;
-						LastColor = InteractedObject.GetComponent<Renderer>().material.color;
-						InteractedObject.GetComponent<Renderer>().material.color = Color.yellow;
-					}
-					
+				InteractedObject = HitInfo.transform.gameObject;
+				ToolTip.text = HitInfo.transform.gameObject.GetComponent<InteractableObjectScript>().FormatTooltip(UsingController);
+				if (LastObject != InteractedObject)
+				{
+					if (LastObject != null)
+						LastObject.GetComponent<Renderer>().material.color = LastColor;
+					LastObject = InteractedObject;
+					LastColor = InteractedObject.GetComponent<Renderer>().material.color;
+					InteractedObject.GetComponent<Renderer>().material.color = Color.yellow;
 				}
-					ToolTip.transform.parent.gameObject.SetActive((InteractedObject == null ? false : true));
 
 			}
-			
+
+		}
 
 
-			if (Input.GetButtonDown("Interact"))
+
+		if (Input.GetButtonDown("Interact"))
+		{
+			if (InteractedObject != null)
 			{
-				if (InteractedObject != null)
-				{
-					InteractedObject.GetComponent<InteractableObjectScript>().Interact();
-				}
+				InteractedObject.GetComponent<InteractableObjectScript>().Interact();
 			}
-
-
 		}
 		ToolTip.transform.parent.gameObject.SetActive((InteractedObject == null ? false : true));
 

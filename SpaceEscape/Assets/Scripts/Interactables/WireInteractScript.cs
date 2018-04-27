@@ -12,13 +12,19 @@ public class WireInteractScript : InteractableObjectScript
 	}
 
 	public int[] WiresToCut;
+	private int WiresCut = 0;
+
 
 	private WireInteractScript WireController;
+	private GameManagerScript GameManager;
+
+	public float WrongWirePenalty = 300;
 
 
 	private void Start()
 	{
 		WireController = transform.parent.gameObject.GetComponent<WireInteractScript>();
+		GameManager = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
 	}
 
 
@@ -30,12 +36,16 @@ public class WireInteractScript : InteractableObjectScript
 	{
 		if (CurrentType == InteractType.WIRE)
 		{
+			//Play Wire Cutting Sound
 			if (WireController.WiresToCut.ToString().Contains(WireNumber.ToString()))
 			{
-				Debug.Log("Right Wire");
+				WireController.CutWire();
 			}
 			else
-				Debug.Log("Wrong Wire");
+			{
+				//Play sound e.g beep
+				GameManager.RemoveTime(WrongWirePenalty);
+			}
 			Destroy(gameObject);
 		}
 	}
@@ -44,5 +54,14 @@ public class WireInteractScript : InteractableObjectScript
 	{
 		return "Press " + (UsingController ? "X" : "F") + " to Cut " + TooltipName;
 
+	}
+
+	public void CutWire()
+	{
+		WiresCut++;
+		if(WiresToCut.Length == WiresCut)
+		{
+			GameObject.Find("GameManager").GetComponent<GameManagerScript>().PuzzleSolved(0, 1);
+		}
 	}
 }

@@ -7,6 +7,7 @@ public class PlayerControlScript : MonoBehaviour {
 
 	private GameObject GravRemote;
 	private GameObject Screwdriver;
+	private GameObject IDCard;
 
 	public bool HasScrewdriver = false;
 	public bool HasGravRemote = false;
@@ -33,6 +34,7 @@ public class PlayerControlScript : MonoBehaviour {
 
 		GravRemote = transform.Find("Gravity Remote").gameObject;
 		Screwdriver = transform.Find("Screwdriver").gameObject;
+		IDCard = transform.Find("ID").gameObject;
 
 		UpdateHeldItem();
 	}
@@ -60,7 +62,7 @@ public class PlayerControlScript : MonoBehaviour {
 		if (Input.GetButtonDown("ItemOne")&&HasScrewdriver)
 			HeldItem = Item.Screwdriver;
 		else if (Input.GetButtonDown("ItemTwo")&&HasIDCard)
-			HeldItem = Item.Screwdriver;
+			HeldItem = Item.IDCard;
 		else if (Input.GetButtonDown("ItemThree")&&HasGravRemote)
 			HeldItem = Item.GravityRemote;
 		else if (Input.GetButtonDown("PutAway"))
@@ -72,6 +74,7 @@ public class PlayerControlScript : MonoBehaviour {
 	{
 		GravRemote.SetActive(HeldItem == Item.GravityRemote);
 		Screwdriver.SetActive(HeldItem == Item.Screwdriver);
+		IDCard.SetActive(HeldItem == Item.IDCard);
 	}
 
 
@@ -92,7 +95,11 @@ public class PlayerControlScript : MonoBehaviour {
 		else
 			if (Input.GetButtonDown("Interact"))
 		{
-			GravityControlScript.SetGravity(Gravity);
+			if (GameObject.Find("GameManager").GetComponent<GameManagerScript>().GravityOn)
+				GravityControlScript.SetGravity(Gravity);
+			else
+				Debug.Log("Offline");
+				//Play Error Beep
 		}
 	}
 }

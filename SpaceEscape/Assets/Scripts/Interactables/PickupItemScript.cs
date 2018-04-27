@@ -10,7 +10,8 @@ public class PickupItemScript : InteractableObjectScript {
 		SCREWDRIVER,
 		IDCARD,
 		GRAVREMOTE,
-		ENERGYCELL
+		ENERGYCELL,
+		GENPART
 	}
 
 	public PickupType Pickup;
@@ -31,6 +32,9 @@ public class PickupItemScript : InteractableObjectScript {
 				break;
 			case PickupType.ENERGYCELL:
 				GameObject.Find("GameManager").GetComponent<GameManagerScript>().HasPowerCell = true;
+				break;
+			case PickupType.GENPART:
+				GameObject.Find("GameManager").GetComponent<GameManagerScript>().GravityGeneratorParts++;
 				break;
 		}
 		Destroy(gameObject);
